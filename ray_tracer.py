@@ -38,11 +38,11 @@ def objectFound(o, d, l , h):
     nearest_point = INF
     for obj in spheres:
         t1, t2 = obj.intersectionPoints(o, d) # op = o + t*d    
-        if (t1>=l and t1<nearest_point):
+        if (t1>=l and t1<=h and t1<nearest_point):
             nearest_point = t1
             nearest_obj = obj
             color = obj.color
-        if (t2>=l and t2<nearest_point):
+        if (t2>=l and t1<=h and t2<nearest_point):
             nearest_obj = obj
             color = obj.color
             nearest_point = t2
@@ -64,11 +64,21 @@ def computeLightining(P, N, V, s):
         else :
             if light.type == "point":
                 L = vector_ab(P, light.coordinates)
+                t_max = 1
             else :
                 L = light.coordinates
+                t_max = INF
+                
+            color = objectFound(P, L, 0.001, t_max)
+            if (color != BACKGROUND_COLOR): # if object in shadow we skip adding diffuse and specular
+                continue
+
+            # diffuse
             n_dot_l = dot(N, L)
             if n_dot_l>0:
                 i += light.i * n_dot_l/(vector_len(N)*vector_len(L))
+
+            # specular
             if s!=-1:
                 R = vector_ab(L, vector_scale(N, 2*dot(N,L)))
                 r_dot_v = dot(R,V) 
