@@ -1,11 +1,12 @@
 from utils import *
 
 class Sphere:
-    def __init__(self, r, center, color, specular_exponent=-1):
+    def __init__(self, r, center, color, specular_exponent=-1, reflective=0):
         self.r = r
         self.center = center
         self.s = specular_exponent
         self.color = color
+        self.reflective = reflective
 
     def intersectionPoints(self, o, d):
         co = vector_ab(self.center,o)
